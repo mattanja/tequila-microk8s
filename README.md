@@ -13,7 +13,7 @@ I will run some commands before explaining them, then explain while running.
 
 ## Motivation
 
-Why?
+Why Kubernetes?
 Because more and more projects will run on Kubernetes infrastructure
 and some may need to get started quickly without waiting for IT departments.
 
@@ -56,6 +56,7 @@ package_upgrade: true
 packages: ['snapd']
 
 runcmd:
+  # Floating IP address that can be assigned to the servers in Hetzner cloud
   - sudo ip addr add 78.46.255.252 dev eth0
   - sudo snap install microk8s --channel=1.19/stable --classic
   - sudo microk8s status --wait-ready
@@ -173,6 +174,8 @@ Topics not covered here that will be needed next:
 * Certificate handling
 * Permissions (RBAC), namespaces, users, how to access the Kubernetes cluster etc...
 * Volumes handling - very complex topic. If possible, keep the running components stateless and handle databases and file handling outside of the Kubernetes cluster.
+* Ingress high-availability - this setup will fail if the first node fails
+* Internal networking / DNS of the nodes (for example getting logs from other node fails)
 * Backups
 * Upgrade handling - every 3 months Kubernetes gets a new minor version with upgrade path, but shouldn't be skipped
 
