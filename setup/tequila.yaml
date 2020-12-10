@@ -1,0 +1,78 @@
+#############################################################################
+# Apply file
+#############################################################################
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tequila
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tequila-service
+  namespace: tequila
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+  selector:
+    app: tequila-app
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tequila-app
+  namespace: tequila
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tequila-app
+  template:
+    metadata:
+      labels:
+        app: tequila-app
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: tequila
+        image: nginx
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "50m"
+          limits:
+            memory: "2096Mi"
+            cpu: "1000m"
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tequila-service-ingress
+  namespace: tequila
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-issuer"
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+    - host: app.tequila.fullstackdeveloper.de
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: tequila-service
+              servicePort: 8080
+  tls:
+    - hosts:
+      - app.tequila.fullstackdeveloper.de
+      secretName: tequila-app-ingress-cert

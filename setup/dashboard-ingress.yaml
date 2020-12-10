@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard-ingress
+  namespace: kube-system
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-issuer"
+spec:
+  rules:
+    - host: dashboard.tequila.fullstackdeveloper.de
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: kubernetes-dashboard
+              servicePort: 443
+  tls:
+    - hosts:
+      - dashboard.tequila.fullstackdeveloper.de
+      secretName: kubernetes-dashboard-ingress-cert

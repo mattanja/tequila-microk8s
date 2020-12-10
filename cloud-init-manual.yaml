@@ -1,0 +1,35 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+packages: ['docker.io']
+
+# TODO Replace docker with containerd
+
+# run commands
+# default: none
+# runcmd contains a list of either lists or a string
+# each item will be executed in order at rc.local like level with
+# output to the console
+# - runcmd only runs during the first boot
+# - if the item is a list, the items will be properly executed as if
+#   passed to execve(3) (with the first arg as the command).
+# - if the item is a string, it will be simply written to the file and
+#   will be interpreted by 'sh'
+#
+# Note, that the list has to be proper yaml, so you have to quote
+# any characters yaml would eat (':' can be problematic)
+
+### DRAFT status, not working!
+runcmd:
+  - sudo systemctl start docker && sudo systemctl enable docker
+  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add && sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+  - apt install -y kubeadm=1.19.4-00 kubelet=1.19.4-00 kubectl=1.19.4-00 && apt-mark hold kubelet kubeadm kubectl
+  - echo "`ip -4 addr show ens4 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'` k8smaster" >> /etc/hosts
+  - kubeadm init --control-plane-endpoint "k8smaster:6443"
+  - mkdir $HOME/.kube
+  - cp /etc/kubernetes/admin.conf $HOME/.kube/config
+  - mkdir /run/cloudinit
+  - wget --directory-prefix=/run/cloudinit/ https://docs.projectcalico.org/manifests/calico.yaml
+  - kubectl apply -f /run/cloudinit/calico.yaml
