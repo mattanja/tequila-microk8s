@@ -41,7 +41,8 @@ spec:
       restartPolicy: Always
       containers:
       - name: tequila
-        image: nginx
+        #image: nginx
+        image: mattanja/tequila-app
         imagePullPolicy: Always
         ports:
           - containerPort: 80
