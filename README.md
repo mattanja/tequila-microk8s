@@ -44,7 +44,7 @@ Create machines using cloud-init script and explain the script and what's happen
 
 I am using Hetzner cloud* because it allows running a very cheap cluster (~6 €/month/node = 18 €/month for a very simple cluster of 3 nodes, 4GB RAM each, shared CPU, probably not suitable for production). I have not really validated it, but I think on GKE, AWS ea, such setup would cost ~100 €/month.
 
-    hcloud server create --name tequila01 --image ubuntu-20.04 --type cx21 --user-data-from-file cloud-init-microk8s.yaml --ssh-key mattanja@gft-homeoffice
+    hcloud server create --name tequila01 --image ubuntu-20.04 --type cx21 --user-data-from-file cloud-init-microk8s.yaml --ssh-key publickeyid
 
 Cloud init script:
 
@@ -57,7 +57,7 @@ packages: ['snapd']
 
 runcmd:
   # Floating IP address that can be assigned to the servers in Hetzner cloud
-  - sudo ip addr add 78.46.255.252 dev eth0
+  - sudo ip addr add $FLOATINGIP dev eth0
   - sudo snap install microk8s --channel=1.19/stable --classic
   - sudo microk8s status --wait-ready
   - sudo microk8s enable dashboard dns registry ingress prometheus
@@ -70,8 +70,8 @@ SSH to root@new server
 
 Create second and third machine
 
-    hcloud server create --name tequila02 --image ubuntu-20.04 --type cx21 --user-data-from-file cloud-init-microk8s.yaml --ssh-key mattanja@gft-homeoffice
-    hcloud server create --name tequila03 --image ubuntu-20.04 --type cx21 --user-data-from-file cloud-init-microk8s.yaml --ssh-key mattanja@gft-homeoffice
+    hcloud server create --name tequila02 --image ubuntu-20.04 --type cx21 --user-data-from-file cloud-init-microk8s.yaml --ssh-key publickeyid
+    hcloud server create --name tequila03 --image ubuntu-20.04 --type cx21 --user-data-from-file cloud-init-microk8s.yaml --ssh-key publickeyid
 
 **--> Walk through Kubernetes overview while waiting**
 
@@ -171,7 +171,6 @@ We have now installed a HA Kubernetes cluster in 20 minutes, but a lot of work i
 Obviously it is not possible to cover every topic of setting up a production-ready Kubernetes Cluster in 20 minutes, but this can be a start.
 Topics not covered here that will be needed next:
 
-* Certificate handling
 * Permissions (RBAC), namespaces, users, how to access the Kubernetes cluster etc...
 * Volumes handling - very complex topic. If possible, keep the running components stateless and handle databases and file handling outside of the Kubernetes cluster.
 * Ingress high-availability - this setup will fail if the first node fails
@@ -181,7 +180,7 @@ Topics not covered here that will be needed next:
 
 ## Additional info
 
-Find this documentation under https://guthub.com/mattanja/tequila-microk8s
+Find this documentation under https://github.com/mattanja/tequila-microk8s
 
 ### Resources
 
