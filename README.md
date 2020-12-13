@@ -186,7 +186,8 @@ Find this documentation under https://github.com/mattanja/tequila-microk8s
 
 ### Resources
 
-* https://www.hetzner.com/cloud
+* MicroK8s documentation: https://microk8s.io/docs
+* Hetzner Cloud referral with 20 € credits: https://hetzner.cloud/?ref=HfNlm42XeByE
 * Google GKE Cluster in GCP Free Tier: https://cloud.google.com/free - worker nodes have to be paid for
 * https://community.hetzner.com/tutorials/install-kubernetes-cluster
 * https://ubuntu.com/blog/what-can-you-do-with-microk8s
