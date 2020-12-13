@@ -1,5 +1,7 @@
 # TEQUILA Kubernetes Walkthrough
 
+*Tequila* is the name of the technical community at my employee GFT. This repository contains the scripts and description of a short introduction to Kubernetes and microk8s that I held for the community.
+
 ## Idea for the tequila session (20 minutes)
 
 Show that it is possible to setup a Kubernetes cluster in 20 minutes.
